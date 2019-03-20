@@ -3,7 +3,7 @@
 import numpy as np
 np.random.seed(0)
 
-POS_LIT,NOT_LIT   = 0,1
+LIT,NOT_LIT   = 0,1 #LIT = postive literal
 REWARD,INACTION,PENALTY = 0,1,2 
 NO_ACT, ACT             = 0,1
 
@@ -57,8 +57,8 @@ def calc_all_clause_outputs(x_hat, tsetlin, prune = False):
         """output is a tuple (x,bool), where bool is whether the clause has used literals"""
         used = 0  
         for f in range(num_f):
-            used += tsetlin[c,f,POS_LIT] + tsetlin[c,f,NOT_LIT]  
-            if (action(tsetlin[c,f,POS_LIT]) == ACT and x_hat[f] == 0) or (action(tsetlin[c,f,NOT_LIT]) == ACT and x_hat[f] == 1):
+            used += tsetlin[c,f,LIT] + tsetlin[c,f,NOT_LIT]  
+            if (action(tsetlin[c,f,LIT]) == ACT and x_hat[f] == 0) or (action(tsetlin[c,f,NOT_LIT]) == ACT and x_hat[f] == 1):
                 return (0,True)
         live = True if not prune else (used != 0)
         return (1, live)     
@@ -76,8 +76,8 @@ def update(t_in,y_hat,polarity,clause_output,x_hat,tsetlin,T = 15):
             p_sft = polarity[c] << 3
             c_sft = c_out << 2
             for f in range(num_f):
-                for s in [POS_LIT,NOT_LIT]:
-                    x_d = x_hat[f] if s == POS_LIT else (1 - x_hat[f])
+                for s in [LIT,NOT_LIT]:
+                    x_d = x_hat[f] if s == LIT else (1 - x_hat[f])
                     x_sft = x_d << 1 
                     update_tuple = u[y_sft|p_sft|c_sft|x_sft|action(tsetlin[c,f,s])]
                     if update_tuple != 0:
@@ -102,7 +102,7 @@ MINSTATE      = 1
 MIDSTATE      = MAXSTATE//2  
 action        = lambda state: NO_ACT if state <= MIDSTATE else ACT #note: MIDSTATE = INACTION 
 
-tsetlin       = np.random.choice([MIDSTATE, MIDSTATE+1], size=(num_clauses,num_features, len([POS_LIT,NOT_LIT])))  
+tsetlin       = np.random.choice([MIDSTATE, MIDSTATE+1], size=(num_clauses,num_features, len([LIT,NOT_LIT])))  
 #z holds literal and not literal state
 
 # I deviate from the paper slightly by grouping signs together - this is to make reading the propositions easier
