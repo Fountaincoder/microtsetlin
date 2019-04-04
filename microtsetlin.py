@@ -1,7 +1,9 @@
 
 #PYTHON VERSION > 3
 import numpy as np
-np.random.seed(0)
+import itertools
+
+# np.random.seed(0)
 
 LIT,NOT_LIT   = 0,1 #LIT = postive literal
 REWARD,INACTION,PENALTY = 0,1,2 
@@ -46,7 +48,23 @@ u = [
 ,(0,L,B) #(1,1     ,1,1,0)	
 ,(B,L,0) #(1,1     ,1,1,1)	
 ]
+# write my own choice function
+#implement deterministic randomness 
 
+r_base = [0.0,0.2,0.4,0.6,0.8,1.0]
+rand_proxy = itertools.cycle(r_base) 
+
+# rewrite the choice function
+
+def my_choice(out_list,prob_list):
+    #generate a random number
+    my_rand = next(rand_proxy)
+    assert(sum(prob_list) == 1.0)
+    accum = 0.0
+    for i,j in enumerate(prob_list):
+        accum += j
+        if my_rand <= accum:
+            return out_list[i]
 
 def calc_all_clause_outputs(x_hat, tsetlin, prune = False):  
     """Calculate all clauses using the fact that any FALSE in an AND statement terminates
@@ -136,4 +154,4 @@ def train():
         print("it", i, e,out)
     print(np.transpose(tsetlin))
 
-train()
+# train()
