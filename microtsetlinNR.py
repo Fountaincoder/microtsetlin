@@ -3,8 +3,6 @@
 import numpy as np
 import itertools
 
-#np.random.seed(0)
-
 LIT,NOT_LIT   = 0,1 #LIT = postive literal
 REWARD,INACTION,PENALTY = 0,1,2
 NO_ACT, ACT             = 0,1
@@ -89,11 +87,13 @@ def update(t_in,y_hat,polarity,clause_output,x_hat,tsetlin,T = 15):
                             tsetlin[c,f,s] += 2*(r-p)
                         if tsetlin[c,f,s] > MAXSTATE : tsetlin[c,f,s] = MAXSTATE
                         if tsetlin[c,f,s] < MINSTATE : tsetlin[c,f,s] = MINSTATE
-X = [[0,0],[0,1],[1,0],[1,1]]
-Y = [0,1,1,0]
-r = [0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]
-rc= itertools.cycle(r)
+
+X   = [[0,0],[0,1],[1,0],[1,1]]
+Y   = [0,1,1,0]
+r   = [0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]
+rc  = itertools.cycle(r)
 rc2 = itertools.cycle(r)
+
 num_features  = len(X[0])
 num_clauses   = 10  #must be even
 num_c2        = num_clauses//2
@@ -101,16 +101,10 @@ MAXSTATE      = 100 #must be even
 MINSTATE      = 1
 MIDSTATE      = MAXSTATE//2
 action        = lambda state: NO_ACT if state <= MIDSTATE else ACT #note: MIDSTATE = INACTION
-
 tsetlin       = np.random.choice([float(MIDSTATE), float(MIDSTATE+1)], size=(num_clauses,num_features, len([LIT,NOT_LIT])))
-
-#z holds literal and not literal state
-
-# I deviate from the paper slightly by grouping signs together - this is to make reading the propositions easier
 clause_sign   = np.array(num_c2*[1] + num_c2*[-1])
 polarity      = np.array(num_c2*[1] + num_c2*[0] )
 iterations    = 30
-
 
 def train():
     for i in range(iterations):
@@ -122,12 +116,9 @@ def train():
             out += [tot_c_outputs]
             y_est = 1 if tot_c_outputs >= 0 else 0 #nte: total 0 = output 1
             e += 1 if y_est != y_hat else 0
-            #if np.random.random() < 0.1:
             if next(rc2) < 0.1:
                 y_hat = 1 - y_hat
 
             update(tot_c_outputs,y_hat,polarity,clause_output,x_hat,tsetlin,T=4)
         print("it", i, e,out)
-  #  print(np.transpose(tsetlin))
-
 train()

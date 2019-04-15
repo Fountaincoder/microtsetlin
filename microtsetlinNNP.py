@@ -69,9 +69,6 @@ def my_choice(out_list,prob_list):
         if my_rand <= accum:
             return out_list[i]
 
-
-
-
 def calc_all_clause_outputs(x_hat, tsetlin, prune = False):  
     """Calculate all clauses using the fact that any FALSE in an AND statement terminates
     an AND. 
@@ -97,7 +94,6 @@ def update(t_in,y_hat,polarity,clause_output,x_hat,tsetlin,T = 15):
     y_sft= y_hat << 4
     for c in range(num_c):
         c_out, live  = clause_output[c]
-        # if  (np.random.random_sample() <= p_update) and live:
         if  ( next(rand_proxy2) <= p_update) and live:
             p_sft = polarity[c] << 3
             c_sft = c_out << 2
@@ -107,7 +103,6 @@ def update(t_in,y_hat,polarity,clause_output,x_hat,tsetlin,T = 15):
                     x_sft = x_d << 1 
                     update_tuple = u[y_sft|p_sft|c_sft|x_sft|action(tsetlin[c][f][s])]
                     if update_tuple != 0:
-                       # update_action = np.random.choice([REWARD,INACTION,PENALTY],p=update_tuple)
                         update_action = my_choice([REWARD,INACTION,PENALTY],update_tuple)
                         if update_action == REWARD:
                             if action(tsetlin[c][f][s]) == NO_ACT:
@@ -137,7 +132,6 @@ def build_ndim_array(X,Y,Z,n1,n2):
                 out[-1][-1] += [my_choice([n1,n2],[0.5,0.5])]
     return out
 
-
 num_features  = len(X[0])
 num_clauses   = 10  #must be even 
 num_c2        = num_clauses//2
@@ -145,17 +139,11 @@ MAXSTATE      = 100 #must be even
 MINSTATE      = 1
 MIDSTATE      = MAXSTATE//2  
 action        = lambda state: NO_ACT if state <= MIDSTATE else ACT #note: MIDSTATE = INACTION 
-
-# tsetlin       = np.random.choice([MIDSTATE, MIDSTATE+1], size=(num_clauses,num_features, len([LIT,NOT_LIT])))  
 tsetlin = build_ndim_array(num_clauses,num_features, len([LIT,NOT_LIT]),MIDSTATE, MIDSTATE+1)
-
-#z holds literal and not literal state
-
 # I deviate from the paper slightly by grouping signs together - this is to make reading the propositions easier
 clause_sign   = np.array(num_c2*[1] + num_c2*[-1]) 
 polarity      = np.array(num_c2*[1] + num_c2*[0] ) 
 iterations    = 200
-
 
 def train():
     for i in range(iterations):
@@ -172,11 +160,6 @@ def train():
 
             update(tot_c_outputs,y_hat,polarity,clause_output,x_hat,tsetlin,T=4)
         print("it", i, e,out)
-   # print(np.transpose(tsetlin))
 
 
-
-# out = build_ndim_array(2,2,1,5,6)
-# print(out)
-# print(out[1][1][0])
 train()
