@@ -1,4 +1,3 @@
-
 #PYTHON VERSION > 3
 import numpy as np
 import itertools
