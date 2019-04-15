@@ -1,9 +1,6 @@
-
 #PYTHON VERSION > 3
 import numpy as np
 import itertools
-
-# np.random.seed(0)
 
 LIT,NOT_LIT   = 0,1 #LIT = postive literal
 REWARD,INACTION,PENALTY = 0,1,2 
@@ -157,7 +154,6 @@ def train():
             e += 1 if y_est != y_hat else 0
             if np.random.random() < 0.1:
                 y_hat = 1 - y_hat
-
             update(tot_c_outputs,y_hat,polarity,clause_output,x_hat,tsetlin,T=4)
         print("it", i, e,out)
 
