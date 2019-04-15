@@ -8,5 +8,7 @@ Versions
 - NNP - no numpy - straight python arrays with some of the randomness removed.
 - NR - no randomness - removes all the random calls and replaces with a uniform calls.
 
+![iMAGE](MLPTSET.png)
+
 
 
