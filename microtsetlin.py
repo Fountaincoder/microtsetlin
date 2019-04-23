@@ -154,4 +154,4 @@ def train():
         print("it", i, e,out)
     print(np.transpose(tsetlin))
 
-# train()
+train()
