@@ -7,6 +7,7 @@ The jupyter notebook contains a WIP visualisation of the tsetlin state.
 Versions
 - NNP - no numpy - straight python arrays with some of the randomness removed.
 - NR - no randomness - removes all the random calls and replaces with a uniform calls.
+- MADD - integrating the MADD array for fast thresholding
 
 ![iMAGE](MLPTSET.png)
 
