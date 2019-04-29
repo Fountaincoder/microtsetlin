@@ -121,15 +121,15 @@ here:
 - c_sft - `clause` output shifted 
 - x_sft - `actual input` shifted
 
-There is some randomness to when this is done and whether there is inaction. 
-The when is governed by the function:
+There is some randomness to _when_ this is done and whether there is `inaction`. 
+The _when_ is governed by the function:
 
 ```python
 t_d = max(-T, min(T,t_in))
 p_update = 1.0*(T - t_d)/(2*T) if y_hat == 1  else 1.0*(T + t_d)/(2*T)
 ```
 
-and the choice of reward/penalty or inaction is perform using a choice function:
+and the choice of `reward`/`penalty` or `inaction` is perform using a choice function:
 
 ```python            
 update_action = np.random.choice([REWARD,INACTION,PENALTY],p=update_tuple)
