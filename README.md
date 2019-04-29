@@ -11,7 +11,7 @@ Versions
 
 
 
-# Tstelin Machines: A Newcastle Perspective
+# Tsetlin Machines: A Newcastle Perspective
 
 ## Introduction
 
