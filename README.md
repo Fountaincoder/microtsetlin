@@ -45,7 +45,9 @@ The image below details an early effort at comparing the architecure with Neural
 
 ## What is a learning automata in this implementation?
 
-Counters. In this implementation a learning automata is a simple `int` counter, whose use is governed
+**A Counter**. 
+
+In this implementation a learning automata is a simple `int` counter, whose use is governed
 by an ``action`` function, which simply binarises on a mid level threshold. In python this is:
 
 ```python
@@ -114,12 +116,12 @@ The action can be a reward or inaction or a penalty or inaction, which again is 
 update_tuple = u[y_sft|p_sft|c_sft|x_sft|action(tsetlin[c,f,s])]
 ```
 here:
-- y_sft - desired y shifted
-- p_sft - polarity shifted 
-- c_sft - clause output shifted 
-- x_sft - actual input shifted
+- y_sft - `desired output` shifted
+- p_sft - `polarity` shifted 
+- c_sft - `clause` output shifted 
+- x_sft - `actual input` shifted
 
-There is some randomness to when this is done and whther there is inaction. 
+There is some randomness to when this is done and whether there is inaction. 
 The when is governed by the function:
 
 ```python
@@ -132,7 +134,7 @@ and the choice of reward/penalty or inaction is perform using a choice function:
 ```python            
 update_action = np.random.choice([REWARD,INACTION,PENALTY],p=update_tuple)
 ```
-I'm not sure this need but it's in the original paper.
+I'm not sure this is needed but it's in the original paper.
 The clever piece of this work is the choice of learning updates, this document will not explain this in detail, but refer you
 to the section on nash equilibriums in the original paper.
 
