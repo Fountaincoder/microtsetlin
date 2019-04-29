@@ -121,7 +121,7 @@ here:
 - c_sft - `clause` output shifted 
 - x_sft - `actual input` shifted
 
-There is some randomness to _when_ this is done and whether there is `inaction`. 
+There is some randomness to _when_ update is performed, and whether there is `inaction`. 
 The _when_ is governed by the function:
 
 ```python
