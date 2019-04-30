@@ -92,7 +92,7 @@ def calc_clause_output(c):
         live = True if not prune else (used != 0)
         return (1, live) 
 ```
-Due to the nature of `AND` clauses can end early.
+Due to the nature of `AND` clauses, clauses can end early.
 
 ## How to implement inference
 
