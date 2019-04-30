@@ -66,6 +66,15 @@ NOT the literal. The general data structure is then:
 tsetlin[clauses][features][literals]
 ```
 
+As for how the automata operate, the counter is operate on by single unit increment/decrements, ie.
+
+```python
+if action(tsetlin[c,f,s]) == ACT:
+        tsetlin[c,f,s] -= 1
+else:
+        tsetlin[c,f,s] += 1
+```
+
 ## What propositional clauses structure is used?
 
 ` NOT(X1) AND X1 AND NOT(X2) AND X2 ... NOT(Xn) AND Xn` where `Xn` is a feature (input variable)  
@@ -137,5 +146,7 @@ update_action = np.random.choice([REWARD,INACTION,PENALTY],p=update_tuple)
 I'm not sure this is needed but it's in the original paper.
 The clever piece of this work is the choice of learning updates, this document will not explain this in detail, but refer you
 to the section on nash equilibriums in the original paper.
+
+
 
 
