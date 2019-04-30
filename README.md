@@ -66,7 +66,7 @@ NOT the literal. The general data structure is then:
 tsetlin[clauses][features][literals]
 ```
 
-As for how the automata operate, the counter is operate on by single unit increment/decrements, ie.
+As for how the automata operate, the counter works with increments/decrements of one, ie:
 
 ```python
 if action(tsetlin[c,f,s]) == ACT:
