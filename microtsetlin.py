@@ -116,13 +116,19 @@ def update(t_in,y_hat,polarity,clause_output,x_hat,tsetlin,T = 15):
                             else:
                                 tsetlin[c,f,s] += 1
 
-X = [[0,0],[0,1],[1,0],[1,1]]
-Y = [0,1,1,0]
+# Loading of training and test data
+training_data = np.loadtxt("NoisyXORTrainingData.txt").astype(dtype=np.int32)
+test_data = np.loadtxt("NoisyXORTestData.txt").astype(dtype=np.int32)
+
+X = training_data[:,0:12] # Input features
+Y = training_data[:,12] # Target value
+# X = [[0,0],[0,1],[1,0],[1,1]]
+# Y = [0,1,1,0]
 
 num_features  = len(X[0])
-num_clauses   = 10  #must be even 
+num_clauses   = 20  #must be even
 num_c2        = num_clauses//2
-MAXSTATE      = 100 #must be even
+MAXSTATE      = 200 #must be even
 MINSTATE      = 1
 MIDSTATE      = MAXSTATE//2  
 action        = lambda state: NO_ACT if state <= MIDSTATE else ACT #note: MIDSTATE = INACTION 
