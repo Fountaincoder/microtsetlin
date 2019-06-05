@@ -134,7 +134,7 @@ tsetlin       = np.random.choice([MIDSTATE, MIDSTATE+1], size=(num_clauses,num_f
 # I deviate from the paper slightly by grouping signs together - this is to make reading the propositions easier
 clause_sign   = np.array(num_c2*[1] + num_c2*[-1]) 
 polarity      = np.array(num_c2*[1] + num_c2*[0] ) 
-iterations    = 200
+iterations    = 20
 
 
 def train():
@@ -142,6 +142,8 @@ def train():
         e = 0
         out = []
         for x_hat,y_hat in zip(X,Y):
+            # add in multiple outputs
+            # add in convolution 
             clause_output = calc_all_clause_outputs(x_hat, tsetlin)
             tot_c_outputs = np.sum([c_out*sign if live else 0 for (c_out,live),sign in zip(clause_output,clause_sign)])
             out += [tot_c_outputs]
@@ -153,5 +155,6 @@ def train():
             update(tot_c_outputs,y_hat,polarity,clause_output,x_hat,tsetlin,T=4)
         print("it", i, e,out)
     print(np.transpose(tsetlin))
-
-train()
+import timeit
+f = timeit.timeit(train,number=2)
+print(f)

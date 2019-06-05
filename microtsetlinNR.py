@@ -103,7 +103,7 @@ action        = lambda state: NO_ACT if state <= MIDSTATE else ACT #note: MIDSTA
 tsetlin       = np.random.choice([float(MIDSTATE), float(MIDSTATE+1)], size=(num_clauses,num_features, len([LIT,NOT_LIT])))
 clause_sign   = np.array(num_c2*[1] + num_c2*[-1])
 polarity      = np.array(num_c2*[1] + num_c2*[0] )
-iterations    = 30
+iterations    = 20
 
 def train():
     for i in range(iterations):
@@ -120,4 +120,6 @@ def train():
 
             update(tot_c_outputs,y_hat,polarity,clause_output,x_hat,tsetlin,T=4)
         print("it", i, e,out)
-train()
+import timeit
+f = timeit.timeit(train,number=10)
+print(f)

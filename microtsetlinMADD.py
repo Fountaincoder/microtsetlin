@@ -238,5 +238,6 @@ def train():
             update2(tot_c_outputs,y_hat,polarity,clause_output,x_hat,tsetlin2,T=4)
         print("it", i, e,out)
 
-
-train()
+import timeit
+f = timeit.timeit(train,number=2)
+print(f)

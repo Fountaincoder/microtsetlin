@@ -140,7 +140,7 @@ tsetlin = build_ndim_array(num_clauses,num_features, len([LIT,NOT_LIT]),MIDSTATE
 # I deviate from the paper slightly by grouping signs together - this is to make reading the propositions easier
 clause_sign   = np.array(num_c2*[1] + num_c2*[-1]) 
 polarity      = np.array(num_c2*[1] + num_c2*[0] ) 
-iterations    = 200
+iterations    = 20
 
 def train():
     for i in range(iterations):
@@ -157,5 +157,6 @@ def train():
             update(tot_c_outputs,y_hat,polarity,clause_output,x_hat,tsetlin,T=4)
         print("it", i, e,out)
 
-
-train()
+import timeit
+f = timeit.timeit(train,number=10)
+print(f)
