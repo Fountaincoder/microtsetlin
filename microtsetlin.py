@@ -5,7 +5,7 @@ import itertools
 
 # np.random.seed(0)
 
-LIT,NOT_LIT   = 0,1 #LIT = postive literal
+LIT,NOT_LIT   = 0,1 #LIT = positive literal
 REWARD,INACTION,PENALTY = 0,1,2 
 NO_ACT, ACT             = 0,1
 
@@ -82,6 +82,7 @@ def calc_all_clause_outputs(x_hat, tsetlin, prune = False):
         return (1, live)     
     return [calc_clause_output(c) for c in range(num_c)]
 
+
 def update(t_in,y_hat,polarity,clause_output,x_hat,tsetlin,T = 15):
     """ Perform tsetlin array update."""
     num_c, num_f, _ = tsetlin.shape     
@@ -104,21 +105,25 @@ def update(t_in,y_hat,polarity,clause_output,x_hat,tsetlin,T = 15):
                         if update_action == REWARD:
                             if action(tsetlin[c,f,s]) == NO_ACT:
                                 tsetlin[c,f,s] -= 1
+                                peA[c,f,s]+=1
                                 if tsetlin[c,f,s] < MINSTATE : tsetlin[c,f,s] = MINSTATE
                             else:
-                                tsetlin[c,f,s] += 1 
+                                tsetlin[c,f,s] += 1
+                                reA[c,f,s]+=1 
                                 if tsetlin[c,f,s] > MAXSTATE : tsetlin[c,f,s] = MAXSTATE
                         elif update_action == INACTION:
                             pass
                         elif update_action == PENALTY:
                             if action(tsetlin[c,f,s]) == ACT:
                                 tsetlin[c,f,s] -= 1
+                                peA[c,f,s]+=1
                             else:
                                 tsetlin[c,f,s] += 1
+                                reA[c,f,s]+=1
 
 # Loading of training and test data
 training_data = np.loadtxt("NoisyXORTrainingData.txt").astype(dtype=np.int32)
-test_data = np.loadtxt("NoisyXORTestData.txt").astype(dtype=np.int32)
+#test_data = np.loadtxt("NoisyXORTestData.txt").astype(dtype=np.int32)
 
 X = training_data[:,0:12] # Input features
 Y = training_data[:,12] # Target value
@@ -128,13 +133,16 @@ Y = training_data[:,12] # Target value
 num_features  = len(X[0])
 num_clauses   = 20  #must be even
 num_c2        = num_clauses//2
-MAXSTATE      = 200 #must be even
+MAXSTATE      = 100 #must be even
 MINSTATE      = 1
 MIDSTATE      = MAXSTATE//2  
 action        = lambda state: NO_ACT if state <= MIDSTATE else ACT #note: MIDSTATE = INACTION 
 
 tsetlin       = np.random.choice([MIDSTATE, MIDSTATE+1], size=(num_clauses,num_features, len([LIT,NOT_LIT])))  
 
+reA = np.zeros((num_clauses,num_features, len([LIT,NOT_LIT])))
+peA = np.zeros((num_clauses,num_features, len([LIT,NOT_LIT])))
+penA = []
 #z holds literal and not literal state
 
 # I deviate from the paper slightly by grouping signs together - this is to make reading the propositions easier
@@ -150,14 +158,15 @@ def train():
         for x_hat,y_hat in zip(X,Y):
             clause_output = calc_all_clause_outputs(x_hat, tsetlin)
             tot_c_outputs = np.sum([c_out*sign if live else 0 for (c_out,live),sign in zip(clause_output,clause_sign)])
-            out += [tot_c_outputs]
+            #out += [tot_c_outputs]
             y_est = 1 if tot_c_outputs >= 0 else 0 #nte: total 0 = output 1
             e += 1 if y_est != y_hat else 0
             if np.random.random() < 0.1:
                 y_hat = 1 - y_hat
 
-            update(tot_c_outputs,y_hat,polarity,clause_output,x_hat,tsetlin,T=4)
+            update(tot_c_outputs,y_hat,polarity,clause_output,x_hat,tsetlin,T=15)
         print("it", i, e,out)
+
     print(np.transpose(tsetlin))
 
 train()
