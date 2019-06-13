@@ -161,8 +161,6 @@ def train():
             #out += [tot_c_outputs]
             y_est = 1 if tot_c_outputs >= 0 else 0 #nte: total 0 = output 1
             e += 1 if y_est != y_hat else 0
-            if np.random.random() < 0.1:
-                y_hat = 1 - y_hat
 
             update(tot_c_outputs,y_hat,polarity,clause_output,x_hat,tsetlin,T=15)
         print("it", i, e,out)
