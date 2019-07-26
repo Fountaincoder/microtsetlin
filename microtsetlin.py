@@ -141,7 +141,7 @@ def train():
     for i in range(iterations):
         e = 0
         out = []
-        for x_hat,y_hat in zip(X,Y):
+        for idx,(x_hat,y_hat) in enumerate(zip(X,Y)):
             # add in multiple outputs
             # add in convolution 
             clause_output = calc_all_clause_outputs(x_hat, tsetlin)
@@ -149,12 +149,33 @@ def train():
             out += [tot_c_outputs]
             y_est = 1 if tot_c_outputs >= 0 else 0 #nte: total 0 = output 1
             e += 1 if y_est != y_hat else 0
-            if np.random.random() < 0.1:
-                y_hat = 1 - y_hat
+            # if np.random.random() < 0.1:
+            #     y_hat = 1 - y_hat
+            print("epoch {}, sample {}".format(i, idx))
+
+            alpha = list(map(chr, range(ord('a'), ord('z')+1)))
+            for idx1,i1 in enumerate(tsetlin):
+                if idx1 == 0:
+                    print("Vote for:")
+                elif idx1 == num_c2:
+                    print("Vote against:")
+                not_zero = 0
+                for idx2,i2 in enumerate(i1):
+                    if i2[0] > MIDSTATE:
+                        print(" "+alpha[idx2]+".", end="")
+                        not_zero = 1
+                    if i2[1] > MIDSTATE:
+                        print("!"+alpha[idx2]+".", end="")
+                        not_zero = 1
+                if not not_zero:
+                    print("0", end="")
+                print()
+            print()
 
             update(tot_c_outputs,y_hat,polarity,clause_output,x_hat,tsetlin,T=4)
-        print("it", i, e,out)
-    print(np.transpose(tsetlin))
-import timeit
-f = timeit.timeit(train,number=2)
-print(f)
+        # print("it", i[, e,out)
+    # print(np.transpose(tsetlin))
+# import timeit
+# f = timeit.timeit(train,number=2)
+# print(f)
+train()
