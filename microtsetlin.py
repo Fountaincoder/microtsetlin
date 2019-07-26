@@ -127,7 +127,7 @@ MINSTATE      = 1
 MIDSTATE      = MAXSTATE//2  
 action        = lambda state: NO_ACT if state <= MIDSTATE else ACT #note: MIDSTATE = INACTION 
 
-tsetlin       = np.random.choice([MIDSTATE, MIDSTATE+1], size=(num_clauses,num_features, len([LIT,NOT_LIT])))  
+tsetlin       = np.random.choice([MIDSTATE], size=(num_clauses,num_features, len([LIT,NOT_LIT])))
 
 #z holds literal and not literal state
 
