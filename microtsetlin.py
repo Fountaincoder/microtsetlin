@@ -6,7 +6,7 @@ import itertools
 # np.random.seed(0)
 
 LIT,NOT_LIT   = 0,1 #LIT = positive literal
-REWARD,INACTION,PENALTY = 0,1,2 
+REWARD,INACTION,PENALTY = 0,1,2
 NO_ACT, ACT             = 0,1
 
 s = 3.9
@@ -14,42 +14,42 @@ B = (s-1.0)/s
 L = 1.0/s
 
 u = [
-#(r,i,p) (y_est,pol   ,c,l,i/e)   
- (L,B,0) #(0,0 (-1),0,0,0)	
-,(0,B,L) #(0,0 (-1),0,0,1)	
-,(L,B,0) #(0,0 (-1),0,1,0)	
-,(0,B,L) #(0,0 (-1),0,1,1)	
-,(L,B,0) #(0,0 (-1),1,0,0)	
-,(0,B,L) #(0,0 (-1),1,0,1)	
-,(0,L,B) #(0,0 (-1),1,1,0)	
-,(B,L,0) #(0,0 (-1),1,1,1)	
-,0       #(0,1     ,0,0,0)	
-,0       #(0,1     ,0,0,1)	
-,0       #(0,1     ,0,1,0)	
-,0       #(0,1     ,0,1,1)	
-,(0,0,1) #(0,1     ,1,0,0)	
-,0       #(0,1     ,1,0,1)	
-,0       #(0,1     ,1,1,0)	
-,0       #(0,1     ,1,1,1)	
-,0       #(1,0 (-1),0,0,0)		 
-,0       #(1,0 (-1),0,0,1)		 
-,0       #(1,0 (-1),0,1,0)		 
-,0       #(1,0 (-1),0,1,1)		 
-,(0,0,1) #(1,0 (-1),1,0,0)		 
-,0       #(1,0 (-1),1,0,1)	
-,0       #(1,0 (-1),1,1,0)	
-,0       #(1,0 (-1),1,1,1)	
-,(L,B,0) #(1,1     ,0,0,0)		
-,(0,B,L) #(1,1     ,0,0,1)		
-,(L,B,0) #(1,1     ,0,1,0)		
-,(0,B,L) #(1,1     ,0,1,1)		
-,(L,B,0) #(1,1     ,1,0,0)		
-,(0,B,L) #(1,1     ,1,0,1)	
-,(0,L,B) #(1,1     ,1,1,0)	
-,(B,L,0) #(1,1     ,1,1,1)	
+#(r,i,p) (y_est,pol   ,c,l,i/e)
+ (L,B,0) #(0,0 (-1),0,0,0)
+,(0,B,L) #(0,0 (-1),0,0,1)
+,(L,B,0) #(0,0 (-1),0,1,0)
+,(0,B,L) #(0,0 (-1),0,1,1)
+,(L,B,0) #(0,0 (-1),1,0,0)
+,(0,B,L) #(0,0 (-1),1,0,1)
+,(0,L,B) #(0,0 (-1),1,1,0)
+,(B,L,0) #(0,0 (-1),1,1,1)
+,0       #(0,1     ,0,0,0)
+,0       #(0,1     ,0,0,1)
+,0       #(0,1     ,0,1,0)
+,0       #(0,1     ,0,1,1)
+,(0,0,1) #(0,1     ,1,0,0)
+,0       #(0,1     ,1,0,1)
+,0       #(0,1     ,1,1,0)
+,0       #(0,1     ,1,1,1)
+,0       #(1,0 (-1),0,0,0)
+,0       #(1,0 (-1),0,0,1)
+,0       #(1,0 (-1),0,1,0)
+,0       #(1,0 (-1),0,1,1)
+,(0,0,1) #(1,0 (-1),1,0,0)
+,0       #(1,0 (-1),1,0,1)
+,0       #(1,0 (-1),1,1,0)
+,0       #(1,0 (-1),1,1,1)
+,(L,B,0) #(1,1     ,0,0,0)
+,(0,B,L) #(1,1     ,0,0,1)
+,(L,B,0) #(1,1     ,0,1,0)
+,(0,B,L) #(1,1     ,0,1,1)
+,(L,B,0) #(1,1     ,1,0,0)
+,(0,B,L) #(1,1     ,1,0,1)
+,(0,L,B) #(1,1     ,1,1,0)
+,(B,L,0) #(1,1     ,1,1,1)
 ]
 # write my own choice function
-#implement deterministic randomness 
+#implement deterministic randomness
 
 r_base = [0.0,0.2,0.4,0.6,0.8,1.0]
 rand_proxy = itertools.cycle(r_base)
@@ -66,38 +66,30 @@ def my_choice(out_list,prob_list):
         if my_rand <= accum:
             return out_list[i]
 
-def calc_all_clause_outputs(x_hat, tsetlin, prune = False):  
+def calc_all_clause_outputs(x_hat, tsetlin, prune = False):
     """Calculate all clauses using the fact that any FALSE in an AND statement terminates
-    an AND. 
+    an AND.
     """
-    num_c, num_f, _ = tsetlin.shape             
+    num_c, num_f, _ = tsetlin.shape
     def calc_clause_output(c):
         """output is a tuple (x,bool), where bool is whether the clause has used literals"""
-        used = 0  
+        used = 0
         for f in range(num_f):
             used += action(tsetlin[c,f,LIT]) + action(tsetlin[c,f,NOT_LIT])
             if (action(tsetlin[c,f,LIT]) == ACT and x_hat[f] == 0) or (action(tsetlin[c,f,NOT_LIT]) == ACT and x_hat[f] == 1):
                 return (0,True)
         live = True if not prune else (used != 0)
-        return (1, live)     
+        return (1, live)
     return [calc_clause_output(c) for c in range(num_c)]
 
 
 def update(t_in,y_hat,polarity,clause_output,x_hat,tsetlin,T = 15):
     """ Perform tsetlin array update."""
-    num_c, num_f, _ = tsetlin.shape     
-    t_d = max(-T, min(T,t_in))
-    p_update = 1.0*(T - t_d)/(2*T) if y_hat == 1  else 1.0*(T + t_d)/(2*T)
-    y_sft= y_hat << 4
-    for c in range(num_c):
-        c_out, live  = clause_output[c]
-        if  (np.random.random_sample() <= p_update) and live:
-            p_sft = polarity[c] << 3
-            c_sft = c_out << 2
+    num_c, num_f, _ = tsetlin.shape
             for f in range(num_f):
                 for s in [LIT,NOT_LIT]:
                     x_d = x_hat[f] if s == LIT else (1 - x_hat[f])
-                    x_sft = x_d << 1 
+                    x_sft = x_d << 1
                     update_tuple = u[y_sft|p_sft|c_sft|x_sft|action(tsetlin[c,f,s])]
                     if update_tuple != 0:
                         update_action = np.random.choice([REWARD,INACTION,PENALTY],p=update_tuple)
@@ -109,7 +101,7 @@ def update(t_in,y_hat,polarity,clause_output,x_hat,tsetlin,T = 15):
                                 if tsetlin[c,f,s] < MINSTATE : tsetlin[c,f,s] = MINSTATE
                             else:
                                 tsetlin[c,f,s] += 1
-                                reA[c,f,s]+=1 
+                                reA[c,f,s]+=1
                                 if tsetlin[c,f,s] > MAXSTATE : tsetlin[c,f,s] = MAXSTATE
                         elif update_action == INACTION:
                             pass
@@ -123,22 +115,22 @@ def update(t_in,y_hat,polarity,clause_output,x_hat,tsetlin,T = 15):
 
 # Loading of training and test data
 training_data = np.loadtxt("NoisyXORTrainingData.txt").astype(dtype=np.int32)
-#test_data = np.loadtxt("NoisyXORTestData.txt").astype(dtype=np.int32)
+test_data = np.loadtxt("NoisyXORTestData.txt").astype(dtype=np.int32)
 
-X = training_data[:,0:12] # Input features
-Y = training_data[:,12] # Target value
-# X = [[0,0],[0,1],[1,0],[1,1]]
-# Y = [0,1,1,0]
+#X = training_data[:,0:12] # Input features
+#Y = training_data[:,12] # Target value
+#X = [[0,0],[0,1],[1,0],[1,1]]
+#Y = [0,1,1,0]
 
 num_features  = len(X[0])
 num_clauses   = 20  #must be even
 num_c2        = num_clauses//2
 MAXSTATE      = 100 #must be even
 MINSTATE      = 1
-MIDSTATE      = MAXSTATE//2  
-action        = lambda state: NO_ACT if state <= MIDSTATE else ACT #note: MIDSTATE = INACTION 
+MIDSTATE      = MAXSTATE//2
+action        = lambda state: NO_ACT if state <= MIDSTATE else ACT #note: MIDSTATE = INACTION
 
-tsetlin       = np.random.choice([MIDSTATE, MIDSTATE+1], size=(num_clauses,num_features, len([LIT,NOT_LIT])))  
+tsetlin       = np.random.choice([MIDSTATE, MIDSTATE+1], size=(num_clauses,num_features, len([LIT,NOT_LIT])))
 
 reA = np.zeros((num_clauses,num_features, len([LIT,NOT_LIT])))
 peA = np.zeros((num_clauses,num_features, len([LIT,NOT_LIT])))
@@ -146,8 +138,8 @@ penA = []
 #z holds literal and not literal state
 
 # I deviate from the paper slightly by grouping signs together - this is to make reading the propositions easier
-clause_sign   = np.array(num_c2*[1] + num_c2*[-1]) 
-polarity      = np.array(num_c2*[1] + num_c2*[0] ) 
+clause_sign   = np.array(num_c2*[1] + num_c2*[-1])
+polarity      = np.array(num_c2*[1] + num_c2*[0] )
 iterations    = 200
 
 
